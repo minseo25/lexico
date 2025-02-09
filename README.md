@@ -2,7 +2,7 @@
 
 <div align="center">    
 
-# LEXICO: Extreme KV Cache Compression via Sparse Coding over Universal Dictionaries
+# Lexico: Extreme KV Cache Compression via Sparse Coding over Universal Dictionaries
 
 [![Paper](http://img.shields.io/badge/paper-arxiv.2412.08890-B31B1B.svg)](https://arxiv.org/abs/2412.08890)
 
