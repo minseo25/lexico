@@ -2,6 +2,7 @@ import torch
 import numpy as np
 import random
 import tqdm
+import os
 from torch.utils.tensorboard import SummaryWriter
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from utils import Buffer
@@ -23,6 +24,7 @@ def parse_args():
     parser.add_argument("--lr", type=float, default=0.0001, help="Learning rate")
     parser.add_argument("--buffer_mult", type=int, default=384, help="Multiplier determining buffer size for KV storage")
     parser.add_argument("--seed", type=int, default=0, help="Random seed")
+    parser.add_argument("--gpu_id", type=int, default=0, help="GPU device ID to use (default: 0)")
     return vars(parser.parse_args())
 
 def main(cfg):
@@ -30,7 +32,18 @@ def main(cfg):
     torch.manual_seed(SEED)
     np.random.seed(SEED)
     random.seed(SEED)
-    cfg["device"] = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
+    # GPU 설정
+    if torch.cuda.is_available():
+        if cfg["gpu_id"] >= torch.cuda.device_count():
+            print(f"Warning: GPU {cfg['gpu_id']} not available. Using GPU 0 instead.")
+            cfg["gpu_id"] = 0
+        torch.cuda.set_device(cfg["gpu_id"])
+        cfg["device"] = torch.device(f"cuda:{cfg['gpu_id']}")
+        print(f"Using GPU {cfg['gpu_id']}: {torch.cuda.get_device_name(cfg['gpu_id'])}")
+    else:
+        cfg["device"] = torch.device("cpu")
+        print("CUDA not available, using CPU")
 
     tokenizer = AutoTokenizer.from_pretrained(cfg['model_name_or_path'])
     model = AutoModelForCausalLM.from_pretrained(cfg['model_name_or_path'], torch_dtype=torch.float16, device_map=cfg["device"])

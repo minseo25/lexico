@@ -10,7 +10,7 @@ class Buffer():
         self.cfg = cfg
         self.model = model
         self.tokenizer = tokenizer
-        self.texts = texts
+        self.texts = list(texts)
         self.device = cfg["device"]
         self.buffer = torch.zeros((cfg["batch_size"] * cfg["buffer_mult"], cfg["num_hidden_layers"] * 2, cfg["head_dim"]), device=self.device)
         self.text_pointer = 0
