@@ -52,7 +52,7 @@ To train universal dictionaries on WikiText, run the following commands with the
 cd lexico/dictionary_learning
 
 # run dictionary training
-python train.py --model_name_or_path "meta-llama/Llama-3.2-3B-Instruct" --dictionary_size 4096 --sparsity 8
+python train.py --model_name_or_path "meta-llama/Llama-3.1-8B" --dictionary_size 8192 --sparsity 8 --gpu_id=7
 ```
 After training, update the `path_to_dictionary.json` file in the `lexico` directory to map the model and dictionary settings to the corresponding dictionary file path.
 
